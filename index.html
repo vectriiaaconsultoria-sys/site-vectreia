@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VECTREIA — Automação & IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0c14;--bg2:#0e1120;--bg3:#131729;--bg4:#1a1f35;
+  --blue:#4f8fff;--purple:#9b5dff;--pink:#d055ff;--green:#22c55e;--orange:#f97316;
+  --border:rgba(79,143,255,.12);--border2:rgba(155,93,255,.25);
+  --muted:#6b7499;--text:#d4d8f0;--bright:#eef0ff;
+  --grad:linear-gradient(135deg,#4f8fff 0%,#9b5dff 55%,#d055ff 100%);
+  --font:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:16px;line-height:1.65;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(79,143,255,.06) 0%,transparent 45%),radial-gradient(circle at 80% 70%,rgba(155,93,255,.07) 0%,transparent 45%);pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 5%;height:62px;background:rgba(10,12,20,.88);backdrop-filter:blur(18px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo svg{width:30px;height:30px}
+.logo-text{font-family:var(--mono);font-size:.95rem;font-weight:600;letter-spacing:.14em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);font-size:.82rem;font-weight:500;text-decoration:none;letter-spacing:.02em;transition:color .2s}
+.nav-links a:hover{color:var(--bright)}
+.nav-btn{padding:.42rem 1.2rem;border-radius:6px;font-family:var(--font);font-size:.82rem;font-weight:600;background:var(--grad);color:#fff;border:none;cursor:pointer;letter-spacing:.03em;transition:opacity .2s,transform .15s}
+.nav-btn:hover{opacity:.88;transform:translateY(-1px)}
+
+/* LAYOUT */
+section{position:relative;z-index:1}
+.wrap{max-width:1100px;margin:0 auto;padding:0 5%}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;gap:5rem;padding:80px 5% 60px;max-width:1300px;margin:0 auto}
+.hero-left{flex:1;min-width:0}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;margin-bottom:1.5rem;padding:.28rem .9rem;border-radius:999px;background:rgba(79,143,255,.1);border:1px solid rgba(79,143,255,.22);font-family:var(--mono);font-size:.7rem;color:#7fb5ff;letter-spacing:.06em}
+.hero-badge .dot{width:6px;height:6px;background:#4f8fff;border-radius:50%;animation:blink 2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(79,143,255,.4)}50%{opacity:.5;box-shadow:0 0 0 5px rgba(79,143,255,0)}}
+h1{font-size:clamp(2.6rem,4.5vw,3.8rem);font-weight:700;line-height:1.07;letter-spacing:-.03em;color:var(--bright);margin-bottom:1.25rem}
+h1 .g,h2 .g{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--muted);font-size:1rem;max-width:460px;line-height:1.82;margin-bottom:2rem}
+.hero-actions{display:flex;gap:.9rem;flex-wrap:wrap}
+.btn-grad{display:inline-flex;align-items:center;gap:8px;padding:.72rem 1.7rem;border-radius:8px;background:var(--grad);color:#fff;font-family:var(--font);font-weight:600;font-size:.88rem;text-decoration:none;border:none;cursor:pointer;transition:opacity .2s,transform .2s}
+.btn-grad:hover{opacity:.88;transform:translateY(-2px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:.72rem 1.7rem;border-radius:8px;background:transparent;color:var(--text);font-family:var(--font);font-weight:500;font-size:.88rem;text-decoration:none;border:1px solid var(--border2);cursor:pointer;transition:background .2s,border-color .2s}
+.btn-ghost:hover{background:rgba(155,93,255,.08);border-color:rgba(155,93,255,.4)}
+
+/* WORKFLOW CARD (hero right) */
+.hero-right{flex:0 0 400px}
+.wf-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative}
+.wf-card-bar{display:flex;align-items:center;gap:7px;padding:.65rem 1rem;background:var(--bg3);border-bottom:1px solid var(--border)}
+.wf-dot{width:9px;height:9px;border-radius:50%}
+.wf-card-title{font-family:var(--mono);font-size:.68rem;color:var(--muted);flex:1;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wf-run-badge{font-family:var(--mono);font-size:.62rem;color:#4ade80;padding:.15rem .5rem;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:999px}
+.wf-body{padding:1.1rem 1.1rem .75rem}
+.n8n-node{display:flex;align-items:center;gap:9px;padding:.5rem .8rem;border-radius:8px;border:1px solid;font-size:.76rem;font-weight:600;background:var(--bg3);margin-bottom:0}
+.n8n-node .ni{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.n8n-node .nl{flex:1;font-family:var(--mono);letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.n8n-node .ns{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nt{border-color:rgba(249,115,22,.3);color:#fb923c}.nt .ni{background:rgba(249,115,22,.14)}.nt .ns{background:#f97316;box-shadow:0 0 5px #f97316}
+.na{border-color:rgba(155,93,255,.3);color:#c084ff}.na .ni{background:rgba(155,93,255,.14)}.na .ns{background:#9b5dff;box-shadow:0 0 5px #9b5dff}
+.nb{border-color:rgba(79,143,255,.28);color:#7fb5ff}.nb .ni{background:rgba(79,143,255,.12)}.nb .ns{background:#4f8fff;box-shadow:0 0 5px #4f8fff}
+.nd{border-color:rgba(34,197,94,.28);color:#4ade80}.nd .ni{background:rgba(34,197,94,.12)}.nd .ns{background:#22c55e;box-shadow:0 0 5px #22c55e}
+.wf-conn{height:16px;margin-left:13px;display:flex;align-items:stretch}
+.wf-conn-line{width:2px;background:linear-gradient(to bottom,rgba(79,143,255,.22),rgba(155,93,255,.22))}
+.wf-footer{display:flex;padding:.65rem 1rem;border-top:1px solid var(--border);gap:0}
+.wf-stat{flex:1;text-align:center;padding:.2rem}
+.wf-stat:not(:last-child){border-right:1px solid var(--border)}
+.ws-n{font-family:var(--mono);font-size:.82rem;font-weight:600;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ws-l{font-size:.62rem;color:var(--muted);margin-top:1px}
+@keyframes pulse-node{0%,100%{opacity:1}50%{opacity:.65}}
+.pulse{animation:pulse-node 2.2s infinite}
+
+/* TOOLS BAR */
+.logosbar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.25rem 5%;position:relative;z-index:1}
+.logos-inner{display:flex;align-items:center;gap:0;max-width:1100px;margin:0 auto}
+.logos-label{font-family:var(--mono);font-size:.66rem;color:var(--muted);letter-spacing:.08em;white-space:nowrap;margin-right:2rem}
+.logos-track{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.tool-chip{display:flex;align-items:center;gap:6px;padding:.25rem .7rem;border-radius:5px;background:var(--bg2);border:1px solid var(--border);font-family:var(--mono);font-size:.7rem;color:var(--muted);white-space:nowrap}
+.tc-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+/* SECTION HEADERS */
+.s-eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;color:#7fb5ff;margin-bottom:.9rem;display:block}
+h2{font-size:clamp(1.75rem,3vw,2.4rem);font-weight:700;letter-spacing:-.025em;line-height:1.12;color:var(--bright);margin-bottom:1rem}
+.s-sub{color:var(--muted);font-size:.92rem;max-width:440px;line-height:1.82;margin-bottom:2.75rem}
+
+/* SERVICES */
+.services{padding:6rem 0}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.svc-card{background:var(--bg2);padding:1.75rem 1.6rem;transition:background .2s}
+.svc-card:hover{background:var(--bg3)}
+.svc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.svc-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0}
+.svc-num{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.svc-card h3{font-size:.92rem;font-weight:600;color:var(--bright);margin-bottom:.45rem;letter-spacing:-.01em}
+.svc-card p{font-size:.83rem;color:var(--muted);line-height:1.75}
+
+/* WORKFLOW DEMO */
+.wf-demo{padding:6rem 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.wf-layout{display:flex;gap:3.5rem;align-items:flex-start}
+.wf-text{flex:1}
+.step-tags{display:flex;flex-direction:column;gap:.85rem}
+.step-tag{display:flex;align-items:flex-start;gap:.85rem}
+.s-tag{font-family:var(--mono);font-size:.67rem;padding:.2rem .5rem;border-radius:4px;flex-shrink:0;margin-top:2px;letter-spacing:.04em}
+.tag-blue{background:rgba(79,143,255,.1);border:1px solid rgba(79,143,255,.2);color:#7fb5ff}
+.tag-purple{background:rgba(155,93,255,.1);border:1px solid rgba(155,93,255,.2);color:#c084ff}
+.tag-green{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:#4ade80}
+.step-tag p{font-size:.87rem;color:var(--muted);line-height:1.7}
+.wf-board{flex:0 0 500px;background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.wfb-top{display:flex;align-items:center;justify-content:space-between;padding:.65rem 1.1rem;background:var(--bg2);border-bottom:1px solid var(--border)}
+.wfb-title{font-family:var(--mono);font-size:.7rem;color:var(--muted)}
+.wfb-pills{display:flex;gap:.4rem}
+.wfb-pill{padding:.18rem .6rem;border-radius:4px;font-family:var(--mono);font-size:.63rem;background:rgba(79,143,255,.1);border:1px solid rgba(79,143,255,.2);color:#7fb5ff}
+.wfb-pill.g{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.2);color:#4ade80}
+.wfb-nodes{padding:1.25rem;display:flex;flex-direction:column;gap:0}
+.wfb-row{display:flex;align-items:center;gap:.75rem}
+.wfb-node{flex:1;display:flex;align-items:center;gap:.7rem;padding:.58rem .85rem;border-radius:8px;border:1px solid;background:var(--bg2)}
+.wfb-node .wni{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.88rem;flex-shrink:0}
+.wfb-node .wnt{flex:1;min-width:0}
+.wfb-node .wnn{font-family:var(--mono);font-size:.73rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wfb-node .wns{font-size:.66rem;color:var(--muted);margin-top:1px}
+.wfb-node .wnb{font-family:var(--mono);font-size:.6rem;padding:.12rem .42rem;border-radius:3px;flex-shrink:0}
+.wn-hook{border-color:rgba(249,115,22,.3);color:#fb923c}.wn-hook .wni{background:rgba(249,115,22,.12)}.wn-hook .wnb{background:rgba(249,115,22,.12);color:#fb923c;border:1px solid rgba(249,115,22,.2)}
+.wn-ai{border-color:rgba(155,93,255,.3);color:#c084ff}.wn-ai .wni{background:rgba(155,93,255,.12)}.wn-ai .wnb{background:rgba(155,93,255,.12);color:#c084ff;border:1px solid rgba(155,93,255,.2)}
+.wn-cu{border-color:rgba(79,143,255,.3);color:#7fb5ff}.wn-cu .wni{background:rgba(79,143,255,.12)}.wn-cu .wnb{background:rgba(79,143,255,.12);color:#7fb5ff;border:1px solid rgba(79,143,255,.2)}
+.wn-sh{border-color:rgba(34,197,94,.3);color:#4ade80}.wn-sh .wni{background:rgba(34,197,94,.12)}.wn-sh .wnb{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.2)}
+.wn-wp{border-color:rgba(79,143,255,.25);color:#93c5fd}.wn-wp .wni{background:rgba(79,143,255,.1)}.wn-wp .wnb{background:rgba(79,143,255,.1);color:#93c5fd;border:1px solid rgba(79,143,255,.2)}
+.wn-ml{border-color:rgba(155,93,255,.25);color:#c084ff}.wn-ml .wni{background:rgba(155,93,255,.1)}.wn-ml .wnb{background:rgba(155,93,255,.1);color:#c084ff;border:1px solid rgba(155,93,255,.2)}
+.wfb-spacer{height:7px;margin-left:14px;display:flex}
+.wfb-spacer-line{width:2px;background:linear-gradient(to bottom,rgba(79,143,255,.2),rgba(155,93,255,.2))}
+.wfb-exec{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1.1rem;border-top:1px solid var(--border)}
+.exec-l{font-family:var(--mono);font-size:.66rem;color:var(--muted)}
+.exec-s{font-family:var(--mono);font-size:.66rem;color:#4ade80;display:flex;align-items:center;gap:5px}
+.exec-s::before{content:'';width:5px;height:5px;background:#22c55e;border-radius:50%;box-shadow:0 0 5px #22c55e}
+
+/* STEPS */
+.steps-section{padding:6rem 0}
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.step-card{background:var(--bg2);padding:1.75rem 1.5rem}
+.step-num{font-family:var(--mono);font-size:1.9rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:.4;line-height:1;margin-bottom:.9rem}
+.step-card h3{font-size:.9rem;font-weight:600;color:var(--bright);margin-bottom:.45rem;letter-spacing:-.01em}
+.step-card p{font-size:.82rem;color:var(--muted);line-height:1.7}
+
+/* PRODUCTS */
+.products{padding:6rem 0;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:1.5rem}
+.prod-card{background:var(--bg);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s,transform .3s}
+.prod-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.prod-top{padding:1.6rem 1.75rem 1.4rem;background:linear-gradient(140deg,rgba(79,143,255,.08) 0%,rgba(155,93,255,.06) 100%);border-bottom:1px solid var(--border)}
+.prod-tag{display:inline-block;font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;padding:.2rem .6rem;border-radius:4px;margin-bottom:.8rem;background:rgba(79,143,255,.12);border:1px solid rgba(79,143,255,.22);color:#7fb5ff}
+.prod-card h3{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.prod-body{padding:1.6rem 1.75rem 1.75rem}
+.prod-body p{font-size:.86rem;color:var(--muted);line-height:1.8;margin-bottom:1.4rem}
+.feat-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.feat-list li{display:flex;align-items:flex-start;gap:.6rem;font-size:.82rem;color:var(--text)}
+.feat-check{font-family:var(--mono);font-size:.62rem;color:#4ade80;padding:.1rem .35rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:3px;flex-shrink:0;margin-top:1px}
+
+/* CTA */
+.cta{padding:6rem 0}
+.cta-inner{background:var(--bg2);border:1px solid var(--border2);border-radius:18px;padding:4rem 3rem;text-align:center;position:relative;overflow:hidden}
+.cta-inner::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:600px;height:350px;background:radial-gradient(ellipse,rgba(155,93,255,.1) 0%,transparent 70%);pointer-events:none}
+.cta-inner h2{margin-bottom:.75rem;position:relative}
+.cta-inner p{color:var(--muted);max-width:440px;margin:0 auto 2.5rem;font-size:.97rem;position:relative}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2rem 5%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;position:relative;z-index:1}
+.footer-left{display:flex;flex-direction:column;gap:.35rem}
+.f-brand{display:flex;align-items:center;gap:8px}
+.footer-copy{font-family:var(--mono);font-size:.68rem;color:var(--muted)}
+.footer-tag{font-family:var(--mono);font-size:.63rem;color:rgba(79,143,255,.4)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-size:.8rem;color:var(--muted);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--bright)}
+
+/* ANIMATE */
+.appear{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.appear.in{opacity:1;transform:translateY(0)}
+
+@media(max-width:1000px){
+  .hero{flex-direction:column;padding-top:100px;gap:3rem}
+  .hero-right{display:none}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .wf-layout{flex-direction:column}
+  .wf-board{flex:none;width:100%}
+  .steps-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:620px){
+  .nav-links{display:none}
+  .grid-3{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr}
+  .logos-label{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#4f8fff"/><stop offset=".5" stop-color="#9b5dff"/><stop offset="1" stop-color="#d055ff"/>
+        </linearGradient>
+      </defs>
+      <path d="M16 16 L40 60 L64 16" stroke="url(#lg1)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <path d="M54 16 C54 16 58 18 58 30 C58 44 40 48 40 60" stroke="url(#lg1)" stroke-width="11" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="logo-text">VECTREIA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#servicos">Serviços</a></li>
+    <li><a href="#processo">Processo</a></li>
+    <li><a href="#produtos">Produtos</a></li>
+  </ul>
+  <button class="nav-btn" onclick="document.getElementById('cta').scrollIntoView({behavior:'smooth'})">Fale conosco</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left appear">
+    <div class="hero-badge"><span class="dot"></span>n8n · make · ai agents · api</div>
+    <h1>Seu negócio no<br/><span class="g">piloto automático.</span></h1>
+    <p>Automatizamos operações inteiras com IA e workflows inteligentes. Você foca no crescimento — a máquina cuida do resto, 24h por dia, 7 dias por semana.</p>
+    <div class="hero-actions">
+      <a href="#cta" class="btn-grad">Transformar minha empresa <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 2.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="#processo" class="btn-ghost">Ver o processo</a>
+    </div>
+  </div>
+  <div class="hero-right appear">
+    <div class="wf-card">
+      <div class="wf-card-bar">
+        <div class="wf-dot" style="background:#ff5f57"></div>
+        <div class="wf-dot" style="background:#febc2e"></div>
+        <div class="wf-dot" style="background:#28c840"></div>
+        <span class="wf-card-title">vectreia / lead-capture.json</span>
+        <span class="wf-run-badge">● ATIVO</span>
+      </div>
+      <div class="wf-body">
+        <div class="n8n-node nt pulse">
+          <div class="ni">🔌</div><span class="nl">Webhook Trigger</span><div class="ns"></div>
+        </div>
+        <div class="wf-conn"><div class="wf-conn-line"></div></div>
+        <div class="n8n-node na">
+          <div class="ni">🧠</div><span class="nl">Claude AI · Classificar lead</span><div class="ns"></div>
+        </div>
+        <div class="wf-conn"><div class="wf-conn-line"></div></div>
+        <div class="n8n-node nb">
+          <div class="ni">📁</div><span class="nl">ClickUp · Criar no CRM</span><div class="ns"></div>
+        </div>
+        <div class="wf-conn"><div class="wf-conn-line"></div></div>
+        <div class="n8n-node nb">
+          <div class="ni">💬</div><span class="nl">WhatsApp · Notificar vendedor</span><div class="ns"></div>
+        </div>
+        <div class="wf-conn"><div class="wf-conn-line"></div></div>
+        <div class="n8n-node nd">
+          <div class="ni">✅</div><span class="nl">Concluído · 0.74s</span><div class="ns"></div>
+        </div>
+      </div>
+      <div class="wf-footer">
+        <div class="wf-stat"><div class="ws-n">1.247</div><div class="ws-l">execuções hoje</div></div>
+        <div class="wf-stat"><div class="ws-n">0.8s</div><div class="ws-l">tempo médio</div></div>
+        <div class="wf-stat"><div class="ws-n">100%</div><div class="ws-l">sucesso</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS BAR -->
+<div class="logosbar appear">
+  <div class="logos-inner">
+    <span class="logos-label">INTEGRA COM</span>
+    <div class="logos-track">
+      <div class="tool-chip"><span class="tc-dot" style="background:#ea4b71"></span>n8n</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#ff6b35"></span>Make</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#25d366"></span>WhatsApp API</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#4f8fff"></span>ClickUp</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#3ecf8e"></span>Supabase</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#fbbc04"></span>Google Sheets</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#34b7f1"></span>Telegram</div>
+      <div class="tool-chip"><span class="tc-dot" style="background:#7c3aed"></span>OpenAI / Claude</div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVIÇOS -->
+<section id="servicos" class="services">
+  <div class="wrap">
+    <div class="appear">
+      <span class="s-eyebrow">// O QUE ENTREGAMOS</span>
+      <h2>Automação que <span class="g">realmente funciona</span></h2>
+      <p class="s-sub">Workflows robustos, IA integrada e sistemas que escalam com seu negócio — sem precisar de um time de TI interno.</p>
+    </div>
+    <div class="grid-3 appear">
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(249,115,22,.12)">⚡</div><span class="svc-num">01</span></div>
+        <h3>Workflows n8n</h3>
+        <p>Fluxos de automação completos: captura de leads, notificações, sync entre sistemas e pipelines de dados — rodando 24/7 sem intervenção.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(155,93,255,.12)">🧠</div><span class="svc-num">02</span></div>
+        <h3>Agentes com IA</h3>
+        <p>Integramos Claude, GPT-4 e outros LLMs nos seus workflows para classificar, responder, gerar conteúdo e tomar decisões de forma autônoma.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(79,143,255,.12)">🔗</div><span class="svc-num">03</span></div>
+        <h3>Integrações de API</h3>
+        <p>Conectamos qualquer ferramenta via REST, webhooks ou SDKs. Se existe endpoint, a gente integra ao seu ecossistema atual.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(34,197,94,.12)">📊</div><span class="svc-num">04</span></div>
+        <h3>CRM & Dashboards</h3>
+        <p>Painéis em tempo real conectados ao ClickUp, Supabase ou sua stack. KPIs, funis e alertas automáticos para a equipe comercial.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(52,183,241,.12)">💬</div><span class="svc-num">05</span></div>
+        <h3>Chatbots & Atendimento</h3>
+        <p>Bots que entendem contexto, atendem no WhatsApp e Telegram, qualificam leads e escalam para humanos quando necessário.</p>
+      </div>
+      <div class="svc-card">
+        <div class="svc-head"><div class="svc-icon" style="background:rgba(208,85,255,.12)">🚀</div><span class="svc-num">06</span></div>
+        <h3>Marketing Automatizado</h3>
+        <p>Publicação em redes sociais, geração de conteúdo com IA, e-mails segmentados e relatórios de performance sem esforço manual.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW DEMO -->
+<section id="processo" class="wf-demo">
+  <div class="wrap">
+    <div class="wf-layout">
+      <div class="wf-text appear">
+        <span class="s-eyebrow">// COMO FUNCIONA</span>
+        <h2>Um workflow real,<br/>da entrada <span class="g">ao resultado.</span></h2>
+        <p class="s-sub">Cada automação que entregamos é um fluxo visual, testado e documentado. Você vê exatamente o que está rodando.</p>
+        <div class="step-tags">
+          <div class="step-tag">
+            <span class="s-tag tag-blue">TRIGGER</span>
+            <p>Webhook, agendamento, formulário ou e-mail — qualquer evento dispara o fluxo instantaneamente.</p>
+          </div>
+          <div class="step-tag">
+            <span class="s-tag tag-purple">AI NODE</span>
+            <p>A IA classifica, decide e transforma os dados antes de qualquer ação ser executada.</p>
+          </div>
+          <div class="step-tag">
+            <span class="s-tag tag-green">ACTION</span>
+            <p>O resultado chega onde precisa: CRM, WhatsApp, planilha, e-mail — tudo em milissegundos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="wf-board appear">
+        <div class="wfb-top">
+          <span class="wfb-title">📋 atendimento-automatico.json</span>
+          <div class="wfb-pills"><span class="wfb-pill g">● Ativo</span><span class="wfb-pill">n8n 1.94</span></div>
+        </div>
+        <div class="wfb-nodes">
+          <div class="wfb-row">
+            <div class="wfb-node wn-hook">
+              <div class="wni">🔌</div>
+              <div class="wnt"><div class="wnn">Webhook</div><div class="wns">POST /lead-form</div></div>
+              <span class="wnb">TRIGGER</span>
+            </div>
+          </div>
+          <div class="wfb-spacer"><div class="wfb-spacer-line"></div></div>
+          <div class="wfb-row">
+            <div class="wfb-node wn-ai">
+              <div class="wni">🧠</div>
+              <div class="wnt"><div class="wnn">Claude AI</div><div class="wns">Classificar intenção do lead</div></div>
+              <span class="wnb">AI</span>
+            </div>
+          </div>
+          <div class="wfb-spacer"><div class="wfb-spacer-line"></div></div>
+          <div class="wfb-row">
+            <div class="wfb-node wn-cu" style="flex:1;margin-right:.65rem">
+              <div class="wni">📁</div>
+              <div class="wnt"><div class="wnn">ClickUp</div><div class="wns">Criar tarefa no CRM</div></div>
+              <span class="wnb">HTTP</span>
+            </div>
+            <div class="wfb-node wn-sh" style="flex:1">
+              <div class="wni">📊</div>
+              <div class="wnt"><div class="wnn">Google Sheets</div><div class="wns">Registrar na planilha</div></div>
+              <span class="wnb">APPEND</span>
+            </div>
+          </div>
+          <div class="wfb-spacer"><div class="wfb-spacer-line"></div></div>
+          <div class="wfb-row">
+            <div class="wfb-node wn-wp" style="flex:1;margin-right:.65rem">
+              <div class="wni">💬</div>
+              <div class="wnt"><div class="wnn">WhatsApp API</div><div class="wns">Notificar vendedor</div></div>
+              <span class="wnb">SEND</span>
+            </div>
+            <div class="wfb-node wn-ml" style="flex:1">
+              <div class="wni">📧</div>
+              <div class="wnt"><div class="wnn">Gmail</div><div class="wns">Boas-vindas ao lead</div></div>
+              <span class="wnb">SEND</span>
+            </div>
+          </div>
+        </div>
+        <div class="wfb-exec">
+          <span class="exec-l">Última execução · há 3 segundos · 0.74s</span>
+          <span class="exec-s">Sucesso · 5/5 nodes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASSOS -->
+<section class="steps-section">
+  <div class="wrap">
+    <div class="appear">
+      <span class="s-eyebrow">// O PROCESSO</span>
+      <h2>Do diagnóstico ao <span class="g">deploy.</span></h2>
+      <p class="s-sub">Simples, sem burocracia, com entregável real em cada etapa.</p>
+    </div>
+    <div class="steps-grid appear">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Diagnóstico</h3>
+        <p>Mapeamos seus processos e identificamos onde a automação gera mais retorno imediato para o negócio.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Proposta técnica</h3>
+        <p>Stack definida, escopo detalhado, prazo e ROI estimado. Sem surpresas depois.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Build & testes</h3>
+        <p>Desenvolvemos os workflows, integramos as APIs e testamos cada node até estar estável em produção.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h3>Deploy & suporte</h3>
+        <p>Implantamos, treinamos sua equipe e continuamos disponíveis para ajustes e expansões.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUTOS -->
+<section id="produtos" class="products">
+  <div class="wrap">
+    <div class="appear">
+      <span class="s-eyebrow">// PRODUTOS</span>
+      <h2>Soluções prontas para <span class="g">escalar</span></h2>
+      <p class="s-sub">Sistemas desenvolvidos para nichos específicos, com implantação rápida e resultado garantido.</p>
+    </div>
+    <div class="products-grid appear">
+      <div class="prod-card">
+        <div class="prod-top">
+          <div class="prod-tag">JURÍDICO</div>
+          <h3>JurisVECTREIA</h3>
+        </div>
+        <div class="prod-body">
+          <p>Escritório jurídico no piloto automático. IA para atendimento, monitoramento de processos 24/7 e gestão completa integrada ao seu workflow atual.</p>
+          <ul class="feat-list">
+            <li><span class="feat-check">OK</span>Monitoramento de processos 24/7</li>
+            <li><span class="feat-check">OK</span>IA para triagem e resposta inicial</li>
+            <li><span class="feat-check">OK</span>Dashboard de prazos e audiências</li>
+            <li><span class="feat-check">OK</span>CRM jurídico automatizado via n8n</li>
+          </ul>
+        </div>
+      </div>
+      <div class="prod-card">
+        <div class="prod-top">
+          <div class="prod-tag">CUSTOMIZADO</div>
+          <h3>Automação sob medida</h3>
+        </div>
+        <div class="prod-body">
+          <p>Para empresas com processos únicos. Desenvolvemos do zero com n8n, Make ou código, integrando com qualquer sistema que você já use.</p>
+          <ul class="feat-list">
+            <li><span class="feat-check">OK</span>Análise completa do processo</li>
+            <li><span class="feat-check">OK</span>Stack escolhida junto com você</li>
+            <li><span class="feat-check">OK</span>Código e documentação entregues</li>
+            <li><span class="feat-check">OK</span>Suporte e manutenção inclusos</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="cta">
+  <div class="wrap">
+    <div class="cta-inner appear">
+      <span class="s-eyebrow" style="margin-bottom:.9rem">// PRONTO PARA COMEÇAR?</span>
+      <h2>Sua empresa ainda faz tudo<br/><span class="g">manualmente?</span></h2>
+      <p>Cada processo manual é tempo e dinheiro perdido. Fale com a gente hoje — o diagnóstico é gratuito.</p>
+      <div class="cta-btns">
+        <a href="https://wa.me/556799999999" class="btn-grad" target="_blank">💬 Falar no WhatsApp</a>
+        <a href="https://instagram.com/vectreia" class="btn-ghost" target="_blank">Ver no Instagram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-left">
+    <div class="f-brand">
+      <svg width="22" height="22" viewBox="0 0 80 80" fill="none">
+        <defs><linearGradient id="lg2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#4f8fff"/><stop offset=".5" stop-color="#9b5dff"/><stop offset="1" stop-color="#d055ff"/></linearGradient></defs>
+        <path d="M16 16 L40 60 L64 16" stroke="url(#lg2)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M54 16 C54 16 58 18 58 30 C58 44 40 48 40 60" stroke="url(#lg2)" stroke-width="11" stroke-linecap="round" fill="none"/>
+      </svg>
+      <span style="font-family:var(--mono);font-size:.82rem;font-weight:600;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">VECTREIA</span>
+    </div>
+    <span class="footer-copy">© 2025 VECTREIA Consultoria & Automação</span>
+    <span class="footer-tag">// built with n8n + IA</span>
+  </div>
+  <div class="footer-links">
+    <a href="https://instagram.com/vectreia" target="_blank">Instagram</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#cta">Contato</a>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting)setTimeout(()=>e.target.classList.add('in'),i*80)})
+},{threshold:0.08})
+document.querySelectorAll('.appear').forEach(el=>obs.observe(el))
+</script>
+</body>
+</html>
